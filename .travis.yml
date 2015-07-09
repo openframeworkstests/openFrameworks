@@ -1,35 +1,50 @@
-
-language: objective-c
-compiler: clang
-node_js: '0.10'
+language: c++
+sudo: required
+compiler: gcc
+cache: 
+    - ccache
+    - apt
+addons:
+  apt:
+    sources:
+        - ubuntu-toolchain-r-test
+        - ubuntu-sdk-team
+        - boost-latest
+    packages:
+        - freeglut3-dev 
+        - libasound2-dev 
+        - libxmu-dev 
+        - libxxf86vm-dev 
+        - g++-4.9 
+        - libgl1-mesa-dev
+        - libglu1-mesa-dev 
+        - libraw1394-dev 
+        - libudev-dev 
+        - libdrm-dev 
+        - libglew-dev 
+        - libopenal-dev 
+        - libsndfile-dev 
+        - libfreeimage-dev 
+        - libcairo2-dev 
+        - libfreetype6-dev 
+        - libssl-dev 
+        - libpulse-dev 
+        - libusb-1.0-0-dev 
+        - libgtk-3-dev  
+        - libopencv-dev 
+        - librtaudio-dev 
+        - libboost-filesystem1.55-dev
+      
 env:
-  global:
-    - secure: kjz286d6rs2VHpv4WnxAOYXcdTIaTaABZ0SNXf27r5H+NDu5qx8ZSeCmj/9op/sDjTtpkLKhi2a0njUCWwak28RAWP3dNkT92MkUPVKBkevznSxWeqwLHoUos3AJnhPMB+cwrWvmRC+Ljt5K1q8SxQsS/HXM9pzKL3DG3qxM+eo=
   matrix:
-    - NAME="osx" \
-        SCRIPT_PATH="scripts/$NAME" \
-        SCRIPT="$SCRIPT_PATH/testTemplate.sh"
-    - NAME="ios" \ 
-        SCRIPT_PATH="scripts/$NAME" \
-        SCRIPT="$SCRIPT_PATH/testTemplate.sh"
-    - NAME="android-armv7" \ 
-        SCRIPT_PATH="scripts/android" \
+    - NAME="linux" \
         OF_ROOT="$PWD" \
-        SCRIPT="$SCRIPT_PATH/testTemplate.sh armv7"
-    - NAME="android-x86" \ 
-        SCRIPT_PATH="scripts/android" \
-        OF_ROOT="$PWD" \
-        SCRIPT="$SCRIPT_PATH/testTemplate.sh x86"
-    - NAME="docs" \
-        SCRIPT_PATH="scripts/dev" \
-        SCRIPT="$SCRIPT_PATH/documentation.sh"
-before_install:
-    "if [ \"$NAME\" == \"docs\" ]; then scripts/dev/documentation.sh before_install; fi"
-install:
-    "if [ \"$NAME\" == \"android-armv7\" ] || [ \"$NAME\" == \"android-x86\" ]; then scripts/android/install_tests_env.sh; fi"
+        SCRIPT="scripts/linux/testTemplate.sh"
+before_install: 
+    - export ccache CXX=g++-4.9
 script:
-    "$SCRIPT"
-after_success:
-    "if [ \"$NAME\" == \"docs\" ]; then scripts/dev/documentation.sh after_success; fi"
+    $SCRIPT
 git:
-    depth: 10
+    depth: 1
+notifications:
+    webhooks: http://192.237.185.151/web-hooks/travis_done.cgi
