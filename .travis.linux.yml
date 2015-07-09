@@ -1,5 +1,5 @@
 language: c++
-sudo: false
+sudo: required
 compiler: gcc
 cache: 
     - ccache
@@ -15,7 +15,7 @@ addons:
         - libasound2-dev 
         - libxmu-dev 
         - libxxf86vm-dev 
-        - g++4.9 
+        - g++-4.9 
         - libgl1-mesa-dev
         - libglu1-mesa-dev 
         - libraw1394-dev 
@@ -41,7 +41,7 @@ env:
         OF_ROOT="$PWD" \
         SCRIPT="scripts/linux/testTemplate.sh"
 before_install: 
-    - export CXX=g++-4.9
+    - export ccache CXX=g++-4.9
 script:
     $SCRIPT
 git:

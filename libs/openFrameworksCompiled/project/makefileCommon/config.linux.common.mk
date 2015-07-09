@@ -224,6 +224,13 @@ else
 	PLATFORM_CORE_EXCLUSIONS += $(OF_LIBS_PATH)/openFrameworks/app/ofAppEGLWindow.cpp
 endif
 
+
+ifneq ($(TESTING),1)
+    PLATFORM_CORE_EXCLUSIONS += $(OF_LIBS_PATH)/openFrameworks/sound/ofOpenALSoundPlayer.cpp
+    PLATFORM_CORE_EXCLUSIONS += $(OF_LIBS_PATH)/openFrameworks/sound/ofRtAudioSoundStream.cpp
+    PALTFORM_DEFINES += OF_SOUND_PLAYER_FMOD
+endif
+
 # third party
 PLATFORM_CORE_EXCLUSIONS += $(OF_LIBS_PATH)/glew/%
 PLATFORM_CORE_EXCLUSIONS += $(OF_LIBS_PATH)/cairo/%
@@ -299,9 +306,11 @@ ifneq ($(PLATFORM_ARCH),armv6l)
 endif
     
 PLATFORM_LIBRARIES += freeimage
-PLATFORM_LIBRARIES += rtaudio
 PLATFORM_LIBRARIES += boost_filesystem
 PLATFORM_LIBRARIES += boost_system
+ifneq ($(TESTING),1)
+    PLATFORM_LIBRARIES += rtaudio
+endif
 
 #static libraries (fully qualified paths)
 PLATFORM_STATIC_LIBRARIES =
@@ -331,11 +340,13 @@ PLATFORM_PKG_CONFIG_LIBRARIES += gstreamer-base-$(GST_VERSION)
 PLATFORM_PKG_CONFIG_LIBRARIES += libudev
 PLATFORM_PKG_CONFIG_LIBRARIES += freetype2
 PLATFORM_PKG_CONFIG_LIBRARIES += fontconfig
-PLATFORM_PKG_CONFIG_LIBRARIES += sndfile
-PLATFORM_PKG_CONFIG_LIBRARIES += openal
 PLATFORM_PKG_CONFIG_LIBRARIES += openssl
-PLATFORM_PKG_CONFIG_LIBRARIES += libpulse-simple
-PLATFORM_PKG_CONFIG_LIBRARIES += alsa
+ifneq ($(TESTING),1)
+    PLATFORM_PKG_CONFIG_LIBRARIES += sndfile
+    PLATFORM_PKG_CONFIG_LIBRARIES += openal
+    PLATFORM_PKG_CONFIG_LIBRARIES += libpulse-simple
+    PLATFORM_PKG_CONFIG_LIBRARIES += alsa
+endif
 
 ifneq ($(LINUX_ARM),1)
 	PLATFORM_PKG_CONFIG_LIBRARIES += gl
